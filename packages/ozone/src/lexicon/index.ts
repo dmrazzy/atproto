@@ -80,6 +80,7 @@ import * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos'
 import * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate'
 import * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl'
 import * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos'
+import * as ComAtprotoTempAddReservedHandle from './types/com/atproto/temp/addReservedHandle'
 import * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue'
 import * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels'
 import * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification'
@@ -125,6 +126,7 @@ import * as AppBskyGraphGetSuggestedFollowsByActor from './types/app/bsky/graph/
 import * as AppBskyGraphMuteActor from './types/app/bsky/graph/muteActor'
 import * as AppBskyGraphMuteActorList from './types/app/bsky/graph/muteActorList'
 import * as AppBskyGraphMuteThread from './types/app/bsky/graph/muteThread'
+import * as AppBskyGraphSearchStarterPacks from './types/app/bsky/graph/searchStarterPacks'
 import * as AppBskyGraphUnmuteActor from './types/app/bsky/graph/unmuteActor'
 import * as AppBskyGraphUnmuteActorList from './types/app/bsky/graph/unmuteActorList'
 import * as AppBskyGraphUnmuteThread from './types/app/bsky/graph/unmuteThread'
@@ -134,11 +136,13 @@ import * as AppBskyNotificationListNotifications from './types/app/bsky/notifica
 import * as AppBskyNotificationPutPreferences from './types/app/bsky/notification/putPreferences'
 import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush'
 import * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen'
+import * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig'
 import * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators'
 import * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton'
 import * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions'
 import * as AppBskyUnspeccedSearchActorsSkeleton from './types/app/bsky/unspecced/searchActorsSkeleton'
 import * as AppBskyUnspeccedSearchPostsSkeleton from './types/app/bsky/unspecced/searchPostsSkeleton'
+import * as AppBskyUnspeccedSearchStarterPacksSkeleton from './types/app/bsky/unspecced/searchStarterPacksSkeleton'
 import * as AppBskyVideoGetJobStatus from './types/app/bsky/video/getJobStatus'
 import * as AppBskyVideoGetUploadLimits from './types/app/bsky/video/getUploadLimits'
 import * as AppBskyVideoUploadVideo from './types/app/bsky/video/uploadVideo'
@@ -179,6 +183,9 @@ import * as ToolsOzoneSetDeleteValues from './types/tools/ozone/set/deleteValues
 import * as ToolsOzoneSetGetValues from './types/tools/ozone/set/getValues'
 import * as ToolsOzoneSetQuerySets from './types/tools/ozone/set/querySets'
 import * as ToolsOzoneSetUpsertSet from './types/tools/ozone/set/upsertSet'
+import * as ToolsOzoneSettingListOptions from './types/tools/ozone/setting/listOptions'
+import * as ToolsOzoneSettingRemoveOptions from './types/tools/ozone/setting/removeOptions'
+import * as ToolsOzoneSettingUpsertOption from './types/tools/ozone/setting/upsertOption'
 import * as ToolsOzoneSignatureFindCorrelation from './types/tools/ozone/signature/findCorrelation'
 import * as ToolsOzoneSignatureFindRelatedAccounts from './types/tools/ozone/signature/findRelatedAccounts'
 import * as ToolsOzoneSignatureSearchAccounts from './types/tools/ozone/signature/searchAccounts'
@@ -1129,6 +1136,17 @@ export class ComAtprotoTempNS {
     this._server = server
   }
 
+  addReservedHandle<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoTempAddReservedHandle.Handler<ExtractAuth<AV>>,
+      ComAtprotoTempAddReservedHandle.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.temp.addReservedHandle' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
   checkSignupQueue<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1692,6 +1710,17 @@ export class AppBskyGraphNS {
     return this._server.xrpc.method(nsid, cfg)
   }
 
+  searchStarterPacks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphSearchStarterPacks.Handler<ExtractAuth<AV>>,
+      AppBskyGraphSearchStarterPacks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.searchStarterPacks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
   unmuteActor<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1823,6 +1852,17 @@ export class AppBskyUnspeccedNS {
     this._server = server
   }
 
+  getConfig<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetConfig.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetConfig.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getConfig' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
   getPopularFeedGenerators<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1875,6 +1915,17 @@ export class AppBskyUnspeccedNS {
     >,
   ) {
     const nsid = 'app.bsky.unspecced.searchPostsSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchStarterPacksSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedSearchStarterPacksSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedSearchStarterPacksSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.searchStarterPacksSkeleton' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }
@@ -2171,6 +2222,7 @@ export class ToolsOzoneNS {
   moderation: ToolsOzoneModerationNS
   server: ToolsOzoneServerNS
   set: ToolsOzoneSetNS
+  setting: ToolsOzoneSettingNS
   signature: ToolsOzoneSignatureNS
   team: ToolsOzoneTeamNS
 
@@ -2180,6 +2232,7 @@ export class ToolsOzoneNS {
     this.moderation = new ToolsOzoneModerationNS(server)
     this.server = new ToolsOzoneServerNS(server)
     this.set = new ToolsOzoneSetNS(server)
+    this.setting = new ToolsOzoneSettingNS(server)
     this.signature = new ToolsOzoneSignatureNS(server)
     this.team = new ToolsOzoneTeamNS(server)
   }
@@ -2433,6 +2486,47 @@ export class ToolsOzoneSetNS {
     >,
   ) {
     const nsid = 'tools.ozone.set.upsertSet' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class ToolsOzoneSettingNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  listOptions<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSettingListOptions.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSettingListOptions.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.setting.listOptions' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  removeOptions<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSettingRemoveOptions.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSettingRemoveOptions.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.setting.removeOptions' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  upsertOption<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSettingUpsertOption.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSettingUpsertOption.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.setting.upsertOption' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }
