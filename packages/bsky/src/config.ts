@@ -36,10 +36,17 @@ export interface ServerConfigValues {
   modServiceDid: string
   adminPasswords: string[]
   labelsFromIssuerDids?: string[]
+  indexedAtEpoch?: Date
   // misc/dev
   blobCacheLocation?: string
   statsigKey?: string
   statsigEnv?: string
+  // threads
+  bigThreadUris: Set<string>
+  bigThreadDepth?: number
+  maxThreadDepth?: number
+  // client config
+  clientCheckEmailConfirmed?: boolean
 }
 
 export class ServerConfig {
@@ -121,6 +128,22 @@ export class ServerConfig {
       process.env.NODE_ENV === 'test'
         ? 'test'
         : process.env.BSKY_STATSIG_ENV || 'development'
+    const clientCheckEmailConfirmed =
+      process.env.BSKY_CLIENT_CHECK_EMAIL_CONFIRMED === 'true'
+    const indexedAtEpoch = process.env.BSKY_INDEXED_AT_EPOCH
+      ? new Date(process.env.BSKY_INDEXED_AT_EPOCH)
+      : undefined
+    assert(
+      !indexedAtEpoch || !isNaN(indexedAtEpoch.getTime()),
+      'invalid BSKY_INDEXED_AT_EPOCH',
+    )
+    const bigThreadUris = new Set(envList(process.env.BSKY_BIG_THREAD_URIS))
+    const bigThreadDepth = process.env.BSKY_BIG_THREAD_DEPTH
+      ? parseInt(process.env.BSKY_BIG_THREAD_DEPTH || '', 10)
+      : undefined
+    const maxThreadDepth = process.env.BSKY_MAX_THREAD_DEPTH
+      ? parseInt(process.env.BSKY_MAX_THREAD_DEPTH || '', 10)
+      : undefined
     return new ServerConfig({
       version,
       debugMode,
@@ -156,6 +179,11 @@ export class ServerConfig {
       modServiceDid,
       statsigKey,
       statsigEnv,
+      clientCheckEmailConfirmed,
+      indexedAtEpoch,
+      bigThreadUris,
+      bigThreadDepth,
+      maxThreadDepth,
       ...stripUndefineds(overrides ?? {}),
     })
   }
@@ -307,6 +335,26 @@ export class ServerConfig {
 
   get statsigEnv() {
     return this.cfg.statsigEnv
+  }
+
+  get clientCheckEmailConfirmed() {
+    return this.cfg.clientCheckEmailConfirmed
+  }
+
+  get indexedAtEpoch() {
+    return this.cfg.indexedAtEpoch
+  }
+
+  get bigThreadUris() {
+    return this.cfg.bigThreadUris
+  }
+
+  get bigThreadDepth() {
+    return this.cfg.bigThreadDepth
+  }
+
+  get maxThreadDepth() {
+    return this.cfg.maxThreadDepth
   }
 }
 
