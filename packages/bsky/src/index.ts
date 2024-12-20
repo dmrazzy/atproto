@@ -96,12 +96,26 @@ export class BskyAppView {
       )
     }
 
+    const topicsAgent = config.topicsUrl
+      ? new AtpAgent({ service: config.topicsUrl })
+      : undefined
+    if (topicsAgent && config.topicsApiKey) {
+      topicsAgent.api.setHeader(
+        'authorization',
+        `Bearer ${config.topicsApiKey}`,
+      )
+    }
+
     const dataplane = createDataPlaneClient(config.dataplaneUrls, {
       httpVersion: config.dataplaneHttpVersion,
       rejectUnauthorized: !config.dataplaneIgnoreBadTls,
     })
     const hydrator = new Hydrator(dataplane, config.labelsFromIssuerDids)
-    const views = new Views(imgUriBuilder, videoUriBuilder)
+    const views = new Views({
+      imgUriBuilder: imgUriBuilder,
+      videoUriBuilder: videoUriBuilder,
+      indexedAtEpoch: config.indexedAtEpoch,
+    })
 
     const bsyncClient = createBsyncClient({
       baseUrl: config.bsyncUrl,
@@ -142,6 +156,7 @@ export class BskyAppView {
       dataplane,
       searchAgent,
       suggestionsAgent,
+      topicsAgent,
       hydrator,
       views,
       signingKey,
